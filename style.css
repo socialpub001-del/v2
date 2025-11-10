@@ -1,0 +1,1435 @@
+ /*
+  QR Send - style.css
+  Yeh file poori website ki styling (colors, layout, buttons) ko control karti hai.
+*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --bg-card: #ffffff;
+    --text-primary: #1a1a1a;
+    --text-secondary: #666666;
+    --accent: #4285f4;
+    --accent-hover: #3367d6;
+    --border: #e0e0e0;
+    --shadow: rgba(0, 0, 0, 0.1);
+    --success: #34a853;
+    --error: #ea4335;
+    
+    /* Sender bubble ka naya color taaki ticks saaf dikhein */
+    --bg-sender: #dcf8c6;
+    --text-sender: #1a1a1a;
+}
+
+body.dark-mode {
+    --bg-primary: #0f0f0f;
+    --bg-secondary: #1a1a1a;
+    --bg-card: #1e1e1e;
+    --text-primary: #e8e8e8;
+    --text-secondary: #b0b0b0;
+    --border: #333333;
+    --shadow: rgba(255, 255, 255, 0.05);
+
+    /* Dark mode mein sender bubble ka color */
+    --bg-sender: #224838;
+    --text-sender: #e8e8e8;
+}
+
+body {
+    font-family: 'Google Sans', 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0; /* Mobile par full-screen ke liye */
+    transition: all 0.3s ease;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Background mein dot grid animation */
+body::before {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, var(--accent) 1px, transparent 1px);
+    background-size: 50px 50px;
+    opacity: 0.03;
+    animation: bgMove 20s linear infinite;
+    z-index: 0;
+}
+
+@keyframes bgMove {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(50px, 50px); }
+}
+
+/* Dark/Light mode toggle button */
+.theme-toggle {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    width: 45px;
+    height: 45px;
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px var(--shadow);
+}
+
+.theme-toggle:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 8px 20px var(--shadow);
+}
+
+.theme-toggle svg {
+    width: 22px;
+    height: 22px;
+    fill: var(--text-primary);
+    transition: all 0.3s ease;
+}
+
+/* --- App ka main layout --- */
+.container {
+    position: relative;
+    max-width: 100%;
+    width: 100%;
+    background: var(--bg-card);
+    overflow: hidden;
+    z-index: 1;
+    
+    /* Mobile par full-screen */
+    height: 100vh;
+    max-height: 100vh;
+    border-radius: 0;
+    box-shadow: none;
+    
+    display: flex;
+    flex-direction: column; /* Mobile-first: Upar-neeche */
+}
+
+/* Sidebar (jahaan QR code aur file transfer hai) */
+.sidebar {
+    flex-shrink: 0;
+}
+
+/* Chat ka area */
+.chat-main {
+    flex-grow: 1; /* Bachi hui poori jagah le lega */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Scrolling ke liye zaroori */
+    background: var(--bg-secondary);
+}
+
+/* Jab connection na ho tab yeh dikhega */
+.chat-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex-grow: 1;
+    color: var(--text-secondary);
+    text-align: center;
+    padding: 20px;
+}
+.chat-placeholder svg {
+    width: 80px;
+    height: 80px;
+    fill: var(--text-secondary);
+    opacity: 0.5;
+    margin-bottom: 15px;
+}
+.chat-placeholder p {
+    font-size: 16px;
+    font-weight: 500;
+}
+/* --- End Layout --- */
+
+/* Scrollbar styling */
+.container::-webkit-scrollbar {
+    width: 6px;
+}
+.container::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+.container::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 3px;
+}
+
+/* App ka header */
+header {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+    padding: 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+/* Header par chamak wali animation */
+header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+h1 {
+    font-size: 22px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 6px;
+    letter-spacing: -0.5px;
+}
+
+/* Status text (e.g., "Connected") */
+#status {
+    font-size: 13px;
+    color: rgba(255,255,255,0.9);
+    font-weight: 500;
+}
+
+/* Connection lock animation overlay */
+.connection-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.85);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(10px);
+}
+
+.connection-overlay.active {
+    display: flex;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.lock-animation {
+    position: relative;
+    animation: lockBounce 1s ease-in-out;
+}
+
+@keyframes lockBounce {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+
+.lock-svg {
+    width: 100px;
+    height: 100px;
+}
+
+.lock-body {
+    animation: lockClose 0.8s ease forwards;
+}
+
+@keyframes lockClose {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+.lock-shackle {
+    animation: shackleClose 0.8s ease forwards 0.3s;
+}
+
+@keyframes shackleClose {
+    0% { transform: translateY(-10px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+.checkmark {
+    animation: checkmarkDraw 0.5s ease forwards 1s;
+}
+
+@keyframes checkmarkDraw {
+    0% { stroke-dashoffset: 100; opacity: 0; }
+    100% { stroke-dashoffset: 0; opacity: 1; }
+}
+
+main {
+    padding: 20px;
+    flex-shrink: 0;
+}
+
+#qr-code-container {
+    text-align: center;
+}
+
+/* QR Code ka box */
+#qrcode {
+    display: inline-block;
+    padding: 15px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px var(--shadow);
+    margin-bottom: 15px;
+    transition: transform 0.3s ease;
+}
+
+#qrcode:hover {
+    transform: scale(1.03);
+}
+
+#qrcode canvas,
+#qrcode img {
+    max-width: 100%;
+    height: auto !important;
+    width: auto !important;
+}
+
+#qr-code-container p {
+    color: var(--text-secondary);
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+
+#share-buttons-container {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.share-button {
+    padding: 10px 18px;
+    border: 2px solid var(--border);
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.share-button:hover {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+}
+
+.primary-share {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
+
+.scanner-button {
+    background: var(--success);
+    color: white;
+    border-color: var(--success);
+}
+
+.scanner-button:hover {
+    background: #2d8e47;
+    border-color: #2d8e47;
+}
+
+/* --- QR Scanner Modal --- */
+.scanner-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000000;
+    display: none;
+    flex-direction: column;
+    z-index: 10000;
+    padding: 0;
+}
+
+.scanner-modal.active {
+    display: flex;
+}
+
+.scanner-header {
+    background: rgba(0, 0, 0, 0.9);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 10001;
+}
+
+.scanner-header h2 {
+    font-size: 18px;
+    color: white;
+    font-weight: 600;
+}
+
+.close-scanner {
+    background: var(--error);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    font-weight: bold;
+}
+
+.close-scanner:hover {
+    background: #c82333;
+    transform: scale(1.1);
+}
+
+/* Scanner ka video feed */
+#qr-reader {
+    width: 100% !important;
+    height: calc(100vh - 70px) !important;
+    position: relative;
+    background: #000;
+}
+
+#qr-reader video {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+}
+
+/* Scanner library ka default UI chupayein */
+#qr-reader__dashboard,
+#qr-reader__dashboard_section {
+    display: none !important;
+}
+#qr-reader__scan_region {
+    width: 100% !important;
+    height: 100% !important;
+    position: relative !important;
+    border: none !important;
+}
+/* --- End Scanner --- */
+
+/* Scanner ka frame (box) */
+.scan-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    max-width: 350px;
+    height: 80%;
+    max-height: 350px;
+    border: 3px solid var(--success);
+    border-radius: 20px;
+    z-index: 10000;
+    pointer-events: none;
+    box-shadow: 
+        0 0 0 2000px rgba(0, 0, 0, 0.5), /* Peeche ka overlay */
+        inset 0 0 30px rgba(52, 168, 83, 0.3);
+}
+
+.scan-line {
+    position: absolute;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--success), transparent);
+    animation: scan 2s linear infinite;
+}
+
+@keyframes scan {
+    0% { top: 0; }
+    100% { top: 100%; }
+}
+
+.scan-corners {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.corner {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border: 4px solid var(--success);
+}
+.corner.top-left {
+    top: -3px; left: -3px;
+    border-right: none; border-bottom: none;
+    border-radius: 20px 0 0 0;
+}
+.corner.top-right {
+    top: -3px; right: -3px;
+    border-left: none; border-bottom: none;
+    border-radius: 0 20px 0 0;
+}
+.corner.bottom-left {
+    bottom: -3px; left: -3px;
+    border-right: none; border-top: none;
+    border-radius: 0 0 0 20px;
+}
+.corner.bottom-right {
+    bottom: -3px; right: -3px;
+    border-left: none; border-top: none;
+    border-radius: 0 0 20px 0;
+}
+
+.scan-instruction {
+    position: absolute;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    z-index: 10001;
+    text-align: center;
+    backdrop-filter: blur(10px);
+}
+
+/* "Connected Securely!" text */
+#scan-instructions {
+    text-align: center;
+    animation: slideUp 0.5s ease;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+#scan-instructions p {
+    font-size: 16px;
+    color: var(--success);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* --- File Transfer Area --- */
+.transfer-area {
+    padding: 20px;
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border);
+    flex-shrink: 0;
+}
+
+.transfer-area h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--text-primary);
+}
+
+#file-input {
+    width: 100%;
+    padding: 12px;
+    border: 2px dashed var(--border);
+    border-radius: 10px;
+    background: var(--bg-card);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    font-size: 13px;
+}
+
+#file-input:hover {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: white;
+}
+
+#transfer-status {
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+/* Progress bar list ke liye container */
+#transfer-list-container {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 190px; /* 3 progress bar tak dikhenge */
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+/* --- Progress Bar --- */
+.progress-container {
+    padding: 10px;
+    background: var(--bg-card);
+    border-radius: 10px;
+    box-shadow: 0 2px 8px var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.progress-top-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.progress-bar-wrapper {
+    flex-grow: 1;
+    min-width: 0; /* Flexbox shrink ke liye zaroori */
+}
+
+.progress-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+
+/* File ka naam */
+.progress-label-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Bada naam hone par ... */
+    flex-shrink: 1;
+}
+
+.progress-percentage {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+    margin-left: 8px;
+}
+
+.progress-bar-background {
+    position: relative;
+    width: 100%;
+    height: 10px;
+    background: var(--bg-secondary);
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 2px var(--shadow);
+}
+
+.progress-bar {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 5px;
+    transition: width 0.3s ease;
+    position: relative;
+    
+    /* Animated stripes */
+    background-image: linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.15) 25%, transparent 25%,
+        transparent 50%, rgba(255, 255, 255, 0.15) 50%,
+        rgba(255, 255, 255, 0.15) 75%, transparent 75%,
+        transparent
+    );
+    background-size: 20px 20px;
+    animation: progress-bar-stripes 1s linear infinite;
+}
+
+@keyframes progress-bar-stripes {
+    from { background-position: 20px 0; }
+    to { background-position: 0 0; }
+}
+
+/* Pending state */
+.progress-bar.pending {
+    background: var(--border);
+    width: 100% !important;
+    animation: none;
+}
+
+/* Progress stats (Size, ETA) */
+.progress-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+    font-size: 10px;
+    color: var(--text-secondary);
+}
+
+/* --- CANCEL BUTTON FIX --- */
+.cancel-button {
+    margin-top: 0;
+    padding: 0; /* Padding hatayein */
+    font-size: 14px; /* Icon size */
+    flex-shrink: 0;
+    background: var(--error);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    
+    /* Icon ko center karne ke liye */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    line-height: 1; /* Icon ko vertically center karein */
+}
+
+.cancel-button:hover {
+     background: #d33828;
+     transform: translateY(-2px);
+     box-shadow: 0 4px 12px rgba(234, 67, 53, 0.3);
+}
+/* --- END CANCEL BUTTON FIX --- */
+
+
+/* "Host mode mein jaayein" button */
+.switch-mode-button {
+    margin-top: 12px;
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+    color: #000;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+}
+
+.switch-mode-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 193, 7, 0.4);
+}
+
+/* --- CHAT STYLES --- */
+.chat-container {
+    padding: 20px;
+    border-top: 1px solid var(--border);
+    display: none; /* Shuru mein chupa hua */
+    flex-direction: column;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.chat-container h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--text-primary);
+    flex-shrink: 0;
+}
+
+/* Message list */
+.chat-messages {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex-grow: 1;
+    height: auto;
+}
+
+/* Har ek message bubble */
+.chat-message {
+    padding: 8px 12px;
+    border-radius: 15px;
+    max-width: 80%;
+    word-wrap: break-word;
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+/* Reply button (Hover par dikhega) */
+.chat-message-reply-btn {
+    position: absolute;
+    top: 2px;
+    right: -30px; /* Bubble ke bahar */
+    width: 24px;
+    height: 24px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    display: none; /* Shuru mein chupa hua */
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: all 0.2s ease;
+    z-index: 5;
+}
+.chat-message:hover .chat-message-reply-btn {
+    display: flex;
+}
+.chat-message-reply-btn:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+.chat-message.sender:hover .chat-message-reply-btn {
+    right: auto;
+    left: -30px; /* Sender ke liye left mein */
+}
+.chat-message-reply-btn svg {
+    width: 14px;
+    height: 14px;
+    stroke: var(--text-primary);
+}
+/* --- End Reply Button --- */
+
+
+/* Sender (Humara) message */
+.chat-message.sender {
+    background: var(--bg-sender);
+    color: var(--text-sender);
+    align-self: flex-end;
+    border-bottom-right-radius: 3px;
+}
+
+/* Receiver (Doosre user) ka message */
+.chat-message.receiver {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+    align-self: flex-start;
+    border-bottom-left-radius: 3px;
+}
+
+/* Message ke andar reply context */
+.message-reply-context {
+    background: rgba(0,0,0,0.05);
+    border-left: 3px solid var(--accent);
+    padding: 6px 10px;
+    margin: -2px -6px 8px -6px;
+    border-radius: 4px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+body.dark-mode .message-reply-context {
+    background: rgba(255,255,255,0.05);
+}
+.chat-message.receiver .message-reply-context {
+    border-left-color: var(--success);
+}
+/* --- End Reply Context --- */
+
+
+.chat-message img {
+    max-width: 200px;
+    max-height: 200px;
+    border-radius: 8px;
+    display: block;
+    cursor: pointer;
+}
+
+.message-content {
+    /* Text ya image yahaan rehta hai */
+}
+
+/* Ticks (✓) aur Download status ke liye */
+.message-status-bar {
+    font-size: 10px;
+    margin-top: 2px;
+    text-align: right;
+    opacity: 0.8;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Ticks (✓✓) */
+.msg-status {
+    font-weight: 600;
+    transition: color 0.3s ease;
+    color: var(--text-secondary);
+}
+
+.msg-status.seen {
+    color: var(--accent); /* Blue tick */
+}
+
+/* "Downloaded by peer" text */
+.download-status {
+    font-style: italic;
+    font-size: 9px;
+    display: none; /* Shuru mein chupa hua */
+}
+
+.chat-message.receiver .message-status-bar {
+     display: none; /* Receiver ke message par nahi dikhega */
+}
+
+/* Chat input area */
+.chat-input-area {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+/* Reply bar (Input ke upar) */
+.reply-context-bar {
+    display: none; /* Shuru mein chupa hua */
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-bottom: none;
+    padding: 8px 12px;
+    border-radius: 10px 10px 0 0;
+    margin-bottom: -8px; /* Input se chipka hua */
+    position: relative;
+}
+.reply-context-content {
+    background: var(--bg-card);
+    border-left: 3px solid var(--accent);
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.reply-context-close {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--border);
+    color: var(--text-primary);
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+.reply-context-close:hover {
+    background: var(--error);
+    color: white;
+}
+/* --- End Reply Bar --- */
+
+#chat-input {
+    flex-grow: 1;
+    padding: 10px 12px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg-card);
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+#chat-input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+#chat-send-button,
+#chat-attach-button {
+    padding: 0 15px;
+    height: 44px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#chat-attach-button {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 2px solid var(--border);
+    font-size: 18px;
+    padding: 0 14px;
+}
+
+#chat-send-button:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+}
+
+#chat-attach-button:hover {
+    background: var(--border);
+}
+
+/* "Typing..." text */
+.chat-status {
+    font-size: 12px;
+    color: var(--success);
+    text-align: center;
+    height: 18px;
+    margin-top: 8px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    flex-shrink: 0;
+}
+
+/* Chat limits text (Words: 0/1000...) */
+.chat-limits-info {
+    font-size: 11px;
+    color: var(--text-secondary);
+    text-align: center;
+    margin-top: 8px;
+    flex-shrink: 0;
+}
+/* --- END CHAT STYLES --- */
+
+/* --- Chat Header (Video/Voice call buttons) --- */
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    flex-shrink: 0;
+}
+.chat-header h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0;
+}
+.chat-header-icons {
+    display: flex;
+    gap: 8px;
+}
+.chat-header-button {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 2px solid var(--border);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.chat-header-button:hover {
+    background: var(--border);
+    border-color: var(--text-secondary);
+}
+.chat-header-button svg {
+    fill: none;
+    stroke: var(--text-primary);
+}
+/* --- END CHAT HEADER --- */
+
+
+/* --- DESKTOP LAYOUT (768px se upar) --- */
+@media (min-width: 768px) {
+    body {
+        padding: 15px; /* Desktop par padding */
+    }
+
+    /* WhatsApp jaisa layout */
+    .container {
+        flex-direction: row; /* Side-by-side */
+        max-width: 1100px;
+        max-height: 95vh;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px var(--shadow), 0 0 0 1px var(--border);
+    }
+    
+    .container:hover {
+        transform: translateY(-5px);
+        box-shadow: 
+            0 20px 60px var(--shadow),
+            0 0 0 1px var(--border);
+    }
+
+    .sidebar {
+        width: 350px;
+        flex-shrink: 0;
+        border-right: 1px solid var(--border);
+        overflow-y: auto; /* Sidebar scrollable */
+    }
+
+    .chat-main {
+        width: 100%;
+        border-left: 1px solid var(--border);
+    }
+
+    .chat-container {
+        padding: 20px;
+    }
+}
+/* --- END DESKTOP LAYOUT --- */
+
+/* Chhote mobile screen ke liye adjustments */
+@media (max-width: 600px) {
+    .theme-toggle {
+        width: 40px;
+        height: 40px;
+        top: 10px;
+        right: 10px;
+    }
+    .scan-indicator {
+        width: 85%;
+        height: 85%;
+    }
+    .scan-instruction {
+        bottom: 80px;
+        font-size: 14px;
+        padding: 12px 20px;
+    }
+    
+    /* Mobile par padding adjust karein */
+    main { padding: 15px; }
+    .transfer-area { padding: 15px; }
+    .chat-container { padding: 15px; }
+}
+
+/* --- IMAGE MODAL (Fullscreen image) --- */
+.image-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+    backdrop-filter: blur(8px);
+    animation: fadeIn 0.3s ease;
+}
+.image-modal-overlay.active {
+    display: flex;
+}
+#image-modal-content {
+    max-width: 90vw;
+    max-height: 85vh;
+    object-fit: contain;
+    border-radius: 10px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+}
+.image-modal-close {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: var(--error);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    z-index: 10002;
+}
+.image-modal-close:hover {
+    background: #c82333;
+    transform: scale(1.1);
+}
+.image-modal-download {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    background: var(--success);
+    color: white;
+    border: none;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: none; /* Receiver ke liye JS se active hoga */
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 10002;
+}
+.image-modal-download.active {
+    display: flex;
+}
+.image-modal-download:hover {
+    background: #2d8e47;
+    transform: scale(1.1);
+}
+.image-modal-download svg {
+    width: 22px;
+    height: 22px;
+}
+/* --- END IMAGE MODAL --- */
+
+/* --- CALL UI STYLES --- */
+.call-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-primary);
+    z-index: 10002;
+    display: none;
+    flex-direction: column;
+    animation: fadeIn 0.3s ease;
+}
+.call-modal-overlay.active {
+    display: flex;
+}
+.call-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+.call-header {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-secondary);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+}
+.call-header h3 {
+    color: var(--text-primary);
+    font-size: 18px;
+    font-weight: 600;
+}
+#call-timer {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: var(--bg-card);
+    padding: 5px 10px;
+    border-radius: 8px;
+}
+.video-grid {
+    flex-grow: 1;
+    position: relative;
+    background: var(--bg-secondary);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#remote-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none;
+    transform: scaleX(-1); /* Mirror */
+}
+#local-video {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    width: 100px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 2px solid var(--border);
+    box-shadow: 0 4px 12px var(--shadow);
+    z-index: 10;
+    display: none;
+    transform: scaleX(-1); /* Mirror */
+}
+.call-avatar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+}
+.call-avatar svg {
+    width: 100px;
+    height: 100px;
+    padding: 20px;
+    background: var(--bg-card);
+    border-radius: 50%;
+    stroke: var(--text-secondary);
+}
+.call-controls {
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border);
+    flex-shrink: 0;
+}
+.call-control-button {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-card);
+    color: var(--text-primary);
+    border: 2px solid var(--border);
+    transition: all 0.3s ease;
+}
+.call-control-button svg {
+    stroke: var(--text-primary);
+}
+.call-control-button.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+}
+.call-control-button.active svg {
+    stroke: white;
+}
+.call-control-button.end-call {
+    background: var(--error);
+    border-color: var(--error);
+    color: white;
+}
+.call-control-button.end-call svg {
+    stroke: white;
+}
+
+/* Call aane par notification */
+.incoming-call-toast {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: 0 8px 30px var(--shadow);
+    z-index: 10003;
+    display: none;
+    align-items: center;
+    padding: 15px 20px;
+    gap: 20px;
+    animation: slideDown 0.5s ease;
+}
+.incoming-call-toast.active {
+    display: flex;
+}
+@keyframes slideDown {
+    from { top: -100px; opacity: 0; }
+    to { top: 20px; opacity: 1; }
+}
+.call-toast-info {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+.call-toast-buttons {
+    display: flex;
+    gap: 10px;
+}
+.call-toast-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.call-toast-button.accept {
+    background: var(--success);
+    color: white;
+}
+.call-toast-button.accept:hover {
+    background: #2d8e47;
+}
+.call-toast-button.reject {
+    background: var(--error);
+    color: white;
+}
+.call-toast-button.reject:hover {
+    background: #c82333;
+}
+
+@media (max-width: 768px) {
+    #local-video {
+        width: 80px;
+        height: 120px;
+        bottom: 15px;
+        right: 15px;
+    }
+}
+/* --- END CALL UI STYLES --- */
